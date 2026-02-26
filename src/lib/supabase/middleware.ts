@@ -41,11 +41,12 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/p/") ||
     pathname.startsWith("/auth/callback");
 
-  if (!user && !isPublicRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
+  // TODO: Re-enable auth redirect after testing
+  // if (!user && !isPublicRoute) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/login";
+  //   return NextResponse.redirect(url);
+  // }
 
   // If logged in and on login page, redirect to projects
   if (user && pathname === "/login") {
