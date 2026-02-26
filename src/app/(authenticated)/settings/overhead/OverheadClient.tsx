@@ -16,7 +16,21 @@ type OverheadItem = {
   sort_order: number;
 };
 
-const CATEGORIES = ["subscription", "salary", "workspace", "other"] as const;
+const CATEGORIES = [
+  "subscription",
+  "salary",
+  "contractor",
+  "workspace",
+  "insurance",
+  "travel",
+  "equipment",
+  "marketing",
+  "professional",
+  "training",
+  "hosting",
+  "telephone",
+  "other",
+] as const;
 
 export function OverheadClient({
   initialItems,
