@@ -22,7 +22,7 @@ export default async function ProjectScopingPage({
   ] = await Promise.all([
     supabase
       .from("projects")
-      .select("*, project_versions(*)")
+      .select("*, project_versions!project_versions_project_id_fkey(*)")
       .eq("slug", slug)
       .single(),
     supabase
