@@ -39,16 +39,7 @@ export default async function ProjectScopingPage({
     supabase.from("settings").select("*").eq("key", "annual_billable_days"),
   ]);
 
-  if (!project) {
-    // Debug: log the error in server logs
-    const { error } = await supabase
-      .from("projects")
-      .select("*")
-      .eq("slug", slug)
-      .single();
-    console.error("Project fetch failed for slug:", slug, "Error:", error);
-    return notFound();
-  }
+  if (!project) return notFound();
 
   const annualBillableDays = settings?.[0]?.value
     ? Number(settings[0].value)
