@@ -2,6 +2,16 @@
 
 import { useState } from "react";
 import { formatCurrency } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 type Props = {
   nextVersionNumber: number;
@@ -30,26 +40,25 @@ export function SaveVersionModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-sm rounded-lg border border-border bg-bg shadow-2xl">
-        <div className="px-5 py-4 border-b border-border">
-          <h3 className="text-sm font-semibold text-text">
-            Save as Version {nextVersionNumber}
-          </h3>
-        </div>
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-sm p-0 gap-0" showCloseButton={false}>
+        <DialogHeader className="px-5 py-4 border-b border-border">
+          <DialogTitle>Save as Version {nextVersionNumber}</DialogTitle>
+        </DialogHeader>
 
         <form onSubmit={handleSave} className="px-5 py-4 space-y-4">
           <div>
-            <label className="block text-xs text-text-muted mb-1">
+            <Label htmlFor="version-name" className="text-xs text-muted-foreground">
               Version name
-            </label>
-            <input
+            </Label>
+            <Input
+              id="version-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Initial proposal"
               required
-              className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-dim focus:border-border-hover focus:outline-none"
+              className="mt-1"
               autoFocus
             />
           </div>
@@ -57,36 +66,32 @@ export function SaveVersionModal({
           <div className="flex gap-4 text-xs">
             <div>
               <p className="text-text-dim">Investment</p>
-              <p className="text-text font-medium tabular-nums">
+              <p className="text-foreground font-medium tabular-nums">
                 {formatCurrency(totalInvestment)}
               </p>
             </div>
             <div>
               <p className="text-text-dim">Internal Cost</p>
-              <p className="text-text font-medium tabular-nums">
+              <p className="text-foreground font-medium tabular-nums">
                 {formatCurrency(totalInternalCost)}
               </p>
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-1">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-            >
+          <DialogFooter className="pt-1">
+            <Button type="button" variant="outline" size="xs" onClick={onClose}>
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={saving || !name.trim()}
-              className="rounded-md bg-text px-4 py-1.5 text-xs font-medium text-bg hover:bg-accent-hover disabled:opacity-50 transition-colors"
+              size="xs"
             >
               {saving ? "Saving..." : "Save Version"}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

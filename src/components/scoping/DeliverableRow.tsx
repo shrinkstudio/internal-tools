@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { formatCurrencyExact } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 import type { ScopeDeliverable, Role } from "@/lib/types";
 
 type Props = {
@@ -33,11 +34,11 @@ export function DeliverableRow({
   const [editingName, setEditingName] = useState(false);
 
   return (
-    <tr className="border-b border-border last:border-b-0 hover:bg-surface/30">
+    <tr className="border-b border-border last:border-b-0 hover:bg-card/30">
       {/* Deliverable name */}
       <td className="px-4 py-1.5">
         {editingName ? (
-          <input
+          <Input
             type="text"
             value={deliverable.name}
             onChange={(e) =>
@@ -45,12 +46,12 @@ export function DeliverableRow({
             }
             onBlur={() => setEditingName(false)}
             onKeyDown={(e) => e.key === "Enter" && setEditingName(false)}
-            className="w-full bg-bg border border-border rounded px-2 py-1 text-sm text-text focus:outline-none"
+            className="h-7 text-sm"
             autoFocus
           />
         ) : (
           <span
-            className="text-sm text-text cursor-pointer hover:text-text-muted transition-colors"
+            className="text-sm text-foreground cursor-pointer hover:text-muted-foreground transition-colors"
             onClick={() => setEditingName(true)}
           >
             {deliverable.name}
@@ -63,7 +64,7 @@ export function DeliverableRow({
         const days = deliverable.role_allocations[role.id] || 0;
         return (
           <td key={role.id} className="px-1 py-1.5">
-            <input
+            <Input
               type="number"
               min="0"
               step="0.5"
@@ -73,14 +74,14 @@ export function DeliverableRow({
                 onAllocationChange(phaseId, deliverable.id, role.id, val);
               }}
               placeholder=""
-              className="w-full bg-bg border border-border rounded px-1.5 py-1 text-xs text-center text-text tabular-nums focus:border-border-hover focus:outline-none placeholder:text-transparent [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="h-7 px-1.5 text-xs text-center tabular-nums placeholder:text-transparent"
             />
           </td>
         );
       })}
 
       {/* Total days */}
-      <td className="px-3 py-1.5 text-right text-xs text-text-muted tabular-nums">
+      <td className="px-3 py-1.5 text-right text-xs text-muted-foreground tabular-nums">
         {totalDays > 0
           ? totalDays % 1 === 0
             ? totalDays
@@ -89,7 +90,7 @@ export function DeliverableRow({
       </td>
 
       {/* Investment */}
-      <td className="px-3 py-1.5 text-right text-xs text-text font-medium tabular-nums">
+      <td className="px-3 py-1.5 text-right text-xs text-foreground font-medium tabular-nums">
         {investment > 0 ? formatCurrencyExact(investment) : ""}
       </td>
 
@@ -100,7 +101,7 @@ export function DeliverableRow({
           className="text-text-dim hover:text-red-400 transition-colors text-xs leading-none"
           title="Remove deliverable"
         >
-          ×
+          &times;
         </button>
       </td>
     </tr>

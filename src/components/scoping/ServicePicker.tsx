@@ -2,6 +2,14 @@
 
 import { useState } from "react";
 import { formatDayRange } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { ServiceLibraryItem } from "@/lib/types";
 
 type Props = {
@@ -40,30 +48,31 @@ export function ServicePicker({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-lg rounded-lg border border-border bg-bg shadow-2xl max-h-[80vh] flex flex-col">
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent
+        className="max-w-lg max-h-[80vh] flex flex-col p-0 gap-0"
+        showCloseButton={false}
+      >
         {/* Header */}
-        <div className="px-5 py-4 border-b border-border">
+        <DialogHeader className="px-5 py-4 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-text">
-              Add Deliverable — {phaseName}
-            </h3>
+            <DialogTitle>Add Deliverable - {phaseName}</DialogTitle>
             <button
               onClick={onClose}
-              className="text-text-dim hover:text-text transition-colors text-lg leading-none"
+              className="text-muted-foreground hover:text-foreground transition-colors text-lg leading-none"
             >
-              ×
+              &times;
             </button>
           </div>
-          <input
+          <Input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search services..."
-            className="mt-3 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-dim focus:border-border-hover focus:outline-none"
+            className="mt-3"
             autoFocus
           />
-        </div>
+        </DialogHeader>
 
         {/* Service list */}
         <div className="flex-1 overflow-y-auto px-2 py-2">
@@ -73,18 +82,18 @@ export function ServicePicker({
                 <button
                   key={service.id}
                   onClick={() => onSelect(service)}
-                  className="w-full text-left rounded-md px-3 py-2.5 hover:bg-surface transition-colors"
+                  className="w-full text-left rounded-md px-3 py-2.5 hover:bg-card transition-colors"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm text-text">{service.name}</p>
+                      <p className="text-sm text-foreground">{service.name}</p>
                       {service.typical_team && (
                         <p className="text-xs text-text-dim mt-0.5">
                           {service.typical_team.join(", ")}
                         </p>
                       )}
                     </div>
-                    <span className="text-xs text-text-muted whitespace-nowrap tabular-nums">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap tabular-nums">
                       {formatDayRange(
                         service.typical_effort_min,
                         service.typical_effort_max
@@ -103,7 +112,7 @@ export function ServicePicker({
           {!showAllPhases && allServices.length > services.length && (
             <button
               onClick={() => setShowAllPhases(true)}
-              className="w-full text-center px-3 py-2 text-xs text-text-muted hover:text-text transition-colors mt-1"
+              className="w-full text-center px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors mt-1"
             >
               Show services from all phases
             </button>
@@ -113,23 +122,23 @@ export function ServicePicker({
         {/* Custom deliverable */}
         <div className="px-5 py-3 border-t border-border">
           <form onSubmit={handleCustomSubmit} className="flex gap-2">
-            <input
+            <Input
               type="text"
               value={customName}
               onChange={(e) => setCustomName(e.target.value)}
               placeholder="Or type a custom deliverable name..."
-              className="flex-1 rounded-md border border-border bg-surface px-3 py-1.5 text-sm text-text placeholder-text-dim focus:border-border-hover focus:outline-none"
+              className="flex-1"
             />
-            <button
+            <Button
               type="submit"
               disabled={!customName.trim()}
-              className="rounded-md bg-text px-3 py-1.5 text-xs font-medium text-bg hover:bg-accent-hover disabled:opacity-50 transition-colors"
+              size="xs"
             >
               Add
-            </button>
+            </Button>
           </form>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

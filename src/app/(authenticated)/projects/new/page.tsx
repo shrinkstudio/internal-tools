@@ -6,6 +6,9 @@ import { createBrowserClient } from "@/lib/supabase/client";
 import { generateSlug } from "@/lib/utils";
 import { DEFAULT_PHASES } from "@/lib/types";
 import type { ScopeSnapshot } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function NewProjectPage() {
   const [clientName, setClientName] = useState("");
@@ -88,47 +91,46 @@ export default function NewProjectPage() {
   return (
     <div className="max-w-lg space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-text">New Project</h1>
-        <p className="mt-1 text-sm text-text-muted">
+        <h1 className="text-xl font-semibold text-foreground">New Project</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Create a new scoping project.
         </p>
       </div>
 
       <form onSubmit={handleCreate} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-text-muted mb-1">
-            Client Name
-          </label>
-          <input
+          <Label htmlFor="client-name">Client Name</Label>
+          <Input
+            id="client-name"
             type="text"
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
             required
             placeholder="e.g. Acme Corp"
-            className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-dim focus:border-border-hover focus:outline-none"
+            className="mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-text-muted mb-1">
-            Project Name
-          </label>
-          <input
+          <Label htmlFor="project-name">Project Name</Label>
+          <Input
+            id="project-name"
             type="text"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
             required
             placeholder="e.g. Website Redesign"
-            className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-dim focus:border-border-hover focus:outline-none"
+            className="mt-1"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-text-muted mb-1">
+          <Label htmlFor="slug">
             Slug
             <span className="ml-1 text-text-dim font-normal">(auto-generated)</span>
-          </label>
-          <input
+          </Label>
+          <Input
+            id="slug"
             type="text"
             value={slugOverride}
             onChange={(e) =>
@@ -140,12 +142,12 @@ export default function NewProjectPage() {
               )
             }
             placeholder={autoSlug || "client-project-name"}
-            className="w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-text placeholder-text-dim focus:border-border-hover focus:outline-none font-mono"
+            className="mt-1 font-mono"
           />
           {finalSlug && (
             <p className="mt-1.5 text-xs text-text-dim">
               Client link:{" "}
-              <span className="text-text-muted font-mono">
+              <span className="text-muted-foreground font-mono">
                 internal.shrink.studio/p/{finalSlug}
               </span>
             </p>
@@ -155,20 +157,15 @@ export default function NewProjectPage() {
         {error && <p className="text-sm text-red-400">{error}</p>}
 
         <div className="flex items-center gap-3 pt-2">
-          <button
+          <Button
             type="submit"
             disabled={loading || !clientName.trim() || !projectName.trim()}
-            className="rounded-md bg-text px-4 py-2 text-sm font-medium text-bg hover:bg-accent-hover disabled:opacity-50 transition-colors"
           >
             {loading ? "Creating..." : "Create Project"}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="rounded-md border border-border px-4 py-2 text-sm text-text-muted hover:bg-surface transition-colors"
-          >
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.back()}>
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
     </div>

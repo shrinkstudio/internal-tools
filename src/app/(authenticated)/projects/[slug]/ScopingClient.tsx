@@ -20,6 +20,9 @@ import { ServicePicker } from "@/components/scoping/ServicePicker";
 import { SaveVersionModal } from "@/components/scoping/SaveVersionModal";
 import { ExportDropdown } from "@/components/ui/ExportDropdown";
 import { Toast } from "@/components/ui/Toast";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
   project: Project;
@@ -324,9 +327,9 @@ export function ScopingClient({
         .eq("id", project.id);
 
       setVersions((prev) => [...prev, newVersion]);
-      setVersionName(`v${nextNumber} — ${name}`);
+      setVersionName(`v${nextNumber} - ${name}`);
       setShowSaveModal(false);
-      setToast(`Saved as v${nextNumber} — ${name}`);
+      setToast(`Saved as v${nextNumber} - ${name}`);
     }
   }
 
@@ -346,8 +349,8 @@ export function ScopingClient({
       {/* Page header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-text-muted">{project.client_name}</p>
-          <h1 className="text-xl font-semibold text-text">
+          <p className="text-sm text-muted-foreground">{project.client_name}</p>
+          <h1 className="text-xl font-semibold text-foreground">
             {project.project_name}
           </h1>
           <p className="mt-1 text-xs text-text-dim">
@@ -375,70 +378,58 @@ export function ScopingClient({
             <option value="complete">Complete</option>
           </select>
 
-          <button
-            onClick={() => setShowSaveModal(true)}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-          >
+          <Button variant="outline" size="xs" onClick={() => setShowSaveModal(true)}>
             Save Version
-          </button>
+          </Button>
 
           <ExportDropdown slug={project.slug} />
 
-          <button
-            onClick={handleCopyLink}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-          >
+          <Button variant="outline" size="xs" onClick={handleCopyLink}>
             {copied ? "Copied!" : "Share Link"}
-          </button>
+          </Button>
 
-          <Link
-            href={`/projects/${project.slug}/budget`}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-          >
-            Budget
-          </Link>
+          <Button variant="outline" size="xs" asChild>
+            <Link href={`/projects/${project.slug}/budget`}>Budget</Link>
+          </Button>
 
-          <Link
-            href={`/projects/${project.slug}/versions`}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-          >
-            Versions
-          </Link>
+          <Button variant="outline" size="xs" asChild>
+            <Link href={`/projects/${project.slug}/versions`}>Versions</Link>
+          </Button>
         </div>
       </div>
 
       {/* Grand totals bar */}
-      <div className="flex items-center gap-6 rounded-lg border border-border bg-surface px-5 py-3">
+      <Card className="flex items-center gap-6 px-5 py-3">
         <div>
-          <p className="text-xs text-text-muted">Total Investment</p>
-          <p className="text-lg font-semibold text-text tabular-nums">
+          <p className="text-xs text-muted-foreground">Total Investment</p>
+          <p className="text-lg font-semibold text-foreground tabular-nums">
             {formatCurrency(grandTotalInvestment)}
           </p>
         </div>
-        <div className="h-8 w-px bg-border" />
+        <Separator orientation="vertical" className="h-8" />
         <div>
-          <p className="text-xs text-text-muted">Total Days</p>
-          <p className="text-lg font-semibold text-text tabular-nums">
+          <p className="text-xs text-muted-foreground">Total Days</p>
+          <p className="text-lg font-semibold text-foreground tabular-nums">
             {grandTotalDays % 1 === 0
               ? grandTotalDays
               : grandTotalDays.toFixed(1)}
           </p>
         </div>
-        <div className="h-8 w-px bg-border" />
+        <Separator orientation="vertical" className="h-8" />
         <div>
-          <p className="text-xs text-text-muted">Phases</p>
-          <p className="text-lg font-semibold text-text tabular-nums">
+          <p className="text-xs text-muted-foreground">Phases</p>
+          <p className="text-lg font-semibold text-foreground tabular-nums">
             {phases.length}
           </p>
         </div>
-        <div className="h-8 w-px bg-border" />
+        <Separator orientation="vertical" className="h-8" />
         <div>
-          <p className="text-xs text-text-muted">Deliverables</p>
-          <p className="text-lg font-semibold text-text tabular-nums">
+          <p className="text-xs text-muted-foreground">Deliverables</p>
+          <p className="text-lg font-semibold text-foreground tabular-nums">
             {phases.reduce((sum, p) => sum + p.deliverables.length, 0)}
           </p>
         </div>
-      </div>
+      </Card>
 
       {/* Phase sections */}
       {phases.map((phase) => {
@@ -464,12 +455,9 @@ export function ScopingClient({
       })}
 
       {/* Add phase */}
-      <button
-        onClick={handleAddPhase}
-        className="rounded-md border border-dashed border-border px-4 py-2 text-sm text-text-muted hover:border-border-hover hover:text-text transition-colors"
-      >
+      <Button variant="dashed" onClick={handleAddPhase}>
         + Add Phase
-      </button>
+      </Button>
 
       {/* Service picker modal */}
       {pickerPhaseId && (

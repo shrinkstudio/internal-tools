@@ -10,6 +10,8 @@ import {
 } from "@/lib/calculations";
 import { formatCurrencyExact, formatPercent } from "@/lib/utils";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 type Role = {
   id: string;
@@ -107,18 +109,18 @@ export function RateCardClient({
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-text">Rate Card</h1>
-        <p className="mt-1 text-sm text-text-muted">
+        <h1 className="text-xl font-semibold text-foreground">Rate Card</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Each role&apos;s cost + overhead + markup = client rate
         </p>
       </div>
 
       {/* Overhead info bar */}
-      <div className="rounded-lg border border-border bg-surface px-4 py-3 flex items-center gap-2">
-        <span className="text-xs text-text-muted">
+      <div className="rounded-lg border border-border bg-card px-4 py-3 flex items-center gap-2">
+        <span className="text-xs text-muted-foreground">
           Overhead per day:
         </span>
-        <span className="text-sm font-semibold text-text tabular-nums">
+        <span className="text-sm font-semibold text-foreground tabular-nums">
           {formatCurrencyExact(overheadPerDay)}
         </span>
         <span className="text-xs text-text-dim">(from Settings)</span>
@@ -128,11 +130,11 @@ export function RateCardClient({
       <div className="rounded-lg border border-border overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-surface">
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-text-muted">
+            <tr className="border-b border-border bg-card">
+              <th className="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">
                 Role Title
               </th>
-              <th className="px-3 py-2.5 text-right text-xs font-medium text-text-muted">
+              <th className="px-3 py-2.5 text-right text-xs font-medium text-muted-foreground">
                 Base Cost/Day
               </th>
               <th className="px-3 py-2.5 text-right text-xs font-medium text-text-dim">
@@ -141,7 +143,7 @@ export function RateCardClient({
               <th className="px-3 py-2.5 text-right text-xs font-medium text-text-dim">
                 Total Cost/Day
               </th>
-              <th className="px-3 py-2.5 text-right text-xs font-medium text-text-muted">
+              <th className="px-3 py-2.5 text-right text-xs font-medium text-muted-foreground">
                 Markup %
               </th>
               <th className="px-3 py-2.5 text-right text-xs font-medium text-text-dim">
@@ -153,10 +155,10 @@ export function RateCardClient({
               <th className="px-3 py-2.5 text-right text-xs font-medium text-text-dim">
                 Client Rate/Hour
               </th>
-              <th className="px-3 py-2.5 text-center text-xs font-medium text-text-muted w-16">
+              <th className="px-3 py-2.5 text-center text-xs font-medium text-muted-foreground w-16">
                 Active
               </th>
-              <th className="px-3 py-2.5 text-right text-xs font-medium text-text-muted w-16">
+              <th className="px-3 py-2.5 text-right text-xs font-medium text-muted-foreground w-16">
                 Actions
               </th>
             </tr>
@@ -179,21 +181,21 @@ export function RateCardClient({
                 >
                   {/* Editable: Title */}
                   <td className="px-3 py-2">
-                    <input
+                    <Input
                       type="text"
                       value={role.title}
                       onChange={(e) =>
                         handleRoleChange(role.id, "title", e.target.value)
                       }
-                      className="w-full bg-bg border border-border rounded px-2 py-1 text-sm text-text focus:border-border-hover focus:outline-none"
+                      className="h-7 text-sm"
                     />
                   </td>
 
                   {/* Editable: Base Cost */}
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1">
-                      <span className="text-text-muted text-xs">£</span>
-                      <input
+                      <span className="text-muted-foreground text-xs">£</span>
+                      <Input
                         type="number"
                         step="10"
                         value={role.base_cost_day}
@@ -204,7 +206,7 @@ export function RateCardClient({
                             Number(e.target.value)
                           )
                         }
-                        className="w-20 bg-bg border border-border rounded px-2 py-1 text-sm text-text text-right tabular-nums focus:border-border-hover focus:outline-none"
+                        className="h-7 w-20 text-sm text-right tabular-nums"
                       />
                     </div>
                   </td>
@@ -222,7 +224,7 @@ export function RateCardClient({
                   {/* Editable: Markup % */}
                   <td className="px-3 py-2">
                     <div className="flex items-center justify-end gap-1">
-                      <input
+                      <Input
                         type="number"
                         step="5"
                         min="0"
@@ -235,9 +237,9 @@ export function RateCardClient({
                             Number(e.target.value) / 100
                           )
                         }
-                        className="w-14 bg-bg border border-border rounded px-2 py-1 text-sm text-text text-right tabular-nums focus:border-border-hover focus:outline-none"
+                        className="h-7 w-14 text-sm text-right tabular-nums"
                       />
-                      <span className="text-text-muted text-xs">%</span>
+                      <span className="text-muted-foreground text-xs">%</span>
                     </div>
                   </td>
 
@@ -247,7 +249,7 @@ export function RateCardClient({
                   </td>
 
                   {/* Calculated: Client Day Rate */}
-                  <td className="px-3 py-2 text-right tabular-nums text-text font-medium">
+                  <td className="px-3 py-2 text-right tabular-nums text-foreground font-medium">
                     {formatCurrencyExact(clientDay)}
                   </td>
 
@@ -283,12 +285,14 @@ export function RateCardClient({
 
                   {/* Delete */}
                   <td className="px-3 py-2 text-right">
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="xs"
                       onClick={() => setDeleteTarget(role)}
-                      className="text-text-dim hover:text-red-400 transition-colors text-xs"
+                      className="text-text-dim hover:text-red-400"
                     >
                       Delete
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               );
@@ -303,7 +307,7 @@ export function RateCardClient({
           {roles.filter((r) => r.is_active).length} active role
           {roles.filter((r) => r.is_active).length !== 1 ? "s" : ""} ·
           Blended client day rate:{" "}
-          <span className="text-text-muted tabular-nums">
+          <span className="text-muted-foreground tabular-nums">
             {formatCurrencyExact(
               roles
                 .filter((r) => r.is_active)
@@ -323,12 +327,9 @@ export function RateCardClient({
       )}
 
       {/* Add role */}
-      <button
-        onClick={handleAddRole}
-        className="rounded-md border border-dashed border-border px-4 py-2 text-sm text-text-muted hover:border-border-hover hover:text-text transition-colors"
-      >
+      <Button variant="dashed" onClick={handleAddRole}>
         + Add role
-      </button>
+      </Button>
 
       {/* Delete confirmation */}
       <ConfirmDialog

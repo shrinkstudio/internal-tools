@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import { createBrowserClient } from "@/lib/supabase/client";
@@ -13,9 +14,12 @@ import {
   formatCurrencyExact,
   formatCurrency,
   abbreviateRole,
-  formatDays,
 } from "@/lib/utils";
 import { SummaryCard } from "@/components/ui/SummaryCard";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import type {
   Project,
   ProjectVersion,
@@ -156,10 +160,10 @@ export function BudgetClient({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-text-muted">
-            Internal Budget — {project.client_name}
+          <p className="text-sm text-muted-foreground">
+            Internal Budget - {project.client_name}
           </p>
-          <h1 className="text-xl font-semibold text-text">
+          <h1 className="text-xl font-semibold text-foreground">
             {project.project_name}
           </h1>
           <p className="mt-1 text-xs text-text-dim">
@@ -168,22 +172,16 @@ export function BudgetClient({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {currentVersion && (
-            <span className="rounded-full bg-[#2a2a2a] px-2.5 py-0.5 text-xs text-text-muted">
+            <span className="rounded-full bg-secondary px-2.5 py-0.5 text-xs text-muted-foreground">
               {currentVersion.name ?? `v${currentVersion.version_number}`}
             </span>
           )}
-          <Link
-            href={`/projects/${project.slug}`}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-          >
-            Scope
-          </Link>
-          <Link
-            href={`/projects/${project.slug}/versions`}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-          >
-            Versions
-          </Link>
+          <Button variant="outline" size="xs" asChild>
+            <Link href={`/projects/${project.slug}`}>Scope</Link>
+          </Button>
+          <Button variant="outline" size="xs" asChild>
+            <Link href={`/projects/${project.slug}/versions`}>Versions</Link>
+          </Button>
         </div>
       </div>
 
@@ -201,12 +199,12 @@ export function BudgetClient({
           label="Gross Profit"
           value={formatCurrency(grossProfit)}
         />
-        <div className="rounded-lg border border-border bg-surface px-4 py-3">
-          <p className="text-xs text-text-muted">Profit Margin</p>
+        <Card className="px-4 py-3">
+          <p className="text-xs text-muted-foreground">Profit Margin</p>
           <p className={`mt-1 text-lg font-semibold tabular-nums ${marginColor}`}>
             {profitMargin.toFixed(1)}%
           </p>
-        </div>
+        </Card>
       </div>
 
       {/* Budget phases */}
@@ -230,21 +228,21 @@ export function BudgetClient({
       })}
 
       {/* Grand total row */}
-      <div className="flex items-center gap-6 rounded-lg border border-border bg-surface px-5 py-3">
+      <Card className="flex items-center gap-6 px-5 py-3">
         <div>
-          <p className="text-xs text-text-muted">Total Hours</p>
-          <p className="text-lg font-semibold text-text tabular-nums">
+          <p className="text-xs text-muted-foreground">Total Hours</p>
+          <p className="text-lg font-semibold text-foreground tabular-nums">
             {totalHours}
           </p>
         </div>
-        <div className="h-8 w-px bg-border" />
+        <Separator orientation="vertical" className="h-8" />
         <div>
-          <p className="text-xs text-text-muted">Total Internal Cost</p>
-          <p className="text-lg font-semibold text-text tabular-nums">
+          <p className="text-xs text-muted-foreground">Total Internal Cost</p>
+          <p className="text-lg font-semibold text-foreground tabular-nums">
             {formatCurrency(totalCost)}
           </p>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
@@ -275,23 +273,23 @@ function BudgetPhase({
   return (
     <div className="rounded-lg border border-border overflow-hidden">
       {/* Phase header */}
-      <div className="flex items-center justify-between bg-surface px-4 py-3 border-b border-border">
+      <div className="flex items-center justify-between bg-card px-4 py-3 border-b border-border">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="text-text-dim hover:text-text transition-colors text-xs"
+            className="text-text-dim hover:text-foreground transition-colors text-xs"
           >
-            {collapsed ? "▸" : "▾"}
+            {collapsed ? "\u25B8" : "\u25BE"}
           </button>
-          <h2 className="text-sm font-semibold text-text">{phase.name}</h2>
+          <h2 className="text-sm font-semibold text-foreground">{phase.name}</h2>
           <span className="text-xs text-text-dim">
             {phase.deliverables.length} deliverable
             {phase.deliverables.length !== 1 ? "s" : ""}
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs tabular-nums">
-          <span className="text-text-muted">{phaseTotalHours} hrs</span>
-          <span className="text-text font-medium">
+          <span className="text-muted-foreground">{phaseTotalHours} hrs</span>
+          <span className="text-foreground font-medium">
             {formatCurrency(phaseTotalCost)}
           </span>
         </div>
@@ -301,7 +299,7 @@ function BudgetPhase({
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border bg-bg">
+              <tr className="border-b border-border bg-background">
                 <th className="px-4 py-2 text-left text-xs font-medium text-text-dim min-w-[180px]">
                   Deliverable
                 </th>
@@ -326,7 +324,7 @@ function BudgetPhase({
                 </th>
               </tr>
               {/* Sub-header for Hours / Cost per role */}
-              <tr className="border-b border-border bg-bg">
+              <tr className="border-b border-border bg-background">
                 <th />
                 {roles.map((role) => (
                   <React.Fragment key={role.id}>
@@ -358,8 +356,8 @@ function BudgetPhase({
               ))}
             </tbody>
             <tfoot>
-              <tr className="border-t border-border bg-surface">
-                <td className="px-4 py-2 text-xs font-medium text-text-muted">
+              <tr className="border-t border-border bg-card">
+                <td className="px-4 py-2 text-xs font-medium text-muted-foreground">
                   {phase.name} Total
                 </td>
                 {roles.map((role) => {
@@ -378,19 +376,19 @@ function BudgetPhase({
                   }
                   return (
                     <React.Fragment key={role.id}>
-                      <td className="px-1 py-2 text-center text-xs text-text-muted tabular-nums border-l border-border">
+                      <td className="px-1 py-2 text-center text-xs text-muted-foreground tabular-nums border-l border-border">
                         {roleHours > 0 ? roleHours : ""}
                       </td>
-                      <td className="px-1 py-2 text-center text-xs text-text-muted tabular-nums">
+                      <td className="px-1 py-2 text-center text-xs text-muted-foreground tabular-nums">
                         {roleCost > 0 ? formatCurrencyExact(roleCost) : ""}
                       </td>
                     </React.Fragment>
                   );
                 })}
-                <td className="px-3 py-2 text-right text-xs font-medium text-text tabular-nums border-l border-border">
+                <td className="px-3 py-2 text-right text-xs font-medium text-foreground tabular-nums border-l border-border">
                   {phaseTotalHours}
                 </td>
-                <td className="px-3 py-2 text-right text-xs font-medium text-text tabular-nums">
+                <td className="px-3 py-2 text-right text-xs font-medium text-foreground tabular-nums">
                   {formatCurrencyExact(phaseTotalCost)}
                 </td>
                 <td />
@@ -425,8 +423,8 @@ function BudgetRow({
   const [editingNotes, setEditingNotes] = useState(false);
 
   return (
-    <tr className="border-b border-border last:border-b-0 hover:bg-surface/30">
-      <td className="px-4 py-1.5 text-sm text-text">{deliverable.name}</td>
+    <tr className="border-b border-border last:border-b-0 hover:bg-card/30">
+      <td className="px-4 py-1.5 text-sm text-foreground">{deliverable.name}</td>
 
       {roles.map((role) => {
         const days = deliverable.role_allocations[role.id] || 0;
@@ -436,27 +434,27 @@ function BudgetRow({
           calculateTotalCostPerDay(Number(role.base_cost_day), overheadPerDay);
         return (
           <React.Fragment key={role.id}>
-            <td className="px-1 py-1.5 text-center text-xs text-text-muted tabular-nums border-l border-border">
+            <td className="px-1 py-1.5 text-center text-xs text-muted-foreground tabular-nums border-l border-border">
               {hours > 0 ? hours : ""}
             </td>
-            <td className="px-1 py-1.5 text-center text-xs text-text-muted tabular-nums">
+            <td className="px-1 py-1.5 text-center text-xs text-muted-foreground tabular-nums">
               {cost > 0 ? formatCurrencyExact(cost) : ""}
             </td>
           </React.Fragment>
         );
       })}
 
-      <td className="px-3 py-1.5 text-right text-xs text-text tabular-nums border-l border-border">
+      <td className="px-3 py-1.5 text-right text-xs text-foreground tabular-nums border-l border-border">
         {totalHours > 0 ? totalHours : ""}
       </td>
-      <td className="px-3 py-1.5 text-right text-xs text-text font-medium tabular-nums">
+      <td className="px-3 py-1.5 text-right text-xs text-foreground font-medium tabular-nums">
         {totalCost > 0 ? formatCurrencyExact(totalCost) : ""}
       </td>
 
       {/* Notes */}
       <td className="px-3 py-1.5">
         {editingNotes ? (
-          <input
+          <Input
             type="text"
             value={deliverable.internal_notes}
             onChange={(e) =>
@@ -464,12 +462,12 @@ function BudgetRow({
             }
             onBlur={() => setEditingNotes(false)}
             onKeyDown={(e) => e.key === "Enter" && setEditingNotes(false)}
-            className="w-full bg-bg border border-border rounded px-2 py-0.5 text-xs text-text focus:outline-none"
+            className="h-6 text-xs"
             autoFocus
           />
         ) : (
           <span
-            className="text-xs text-text-dim cursor-pointer hover:text-text-muted transition-colors"
+            className="text-xs text-text-dim cursor-pointer hover:text-muted-foreground transition-colors"
             onClick={() => setEditingNotes(true)}
           >
             {deliverable.internal_notes || "Add note..."}
@@ -479,6 +477,3 @@ function BudgetRow({
     </tr>
   );
 }
-
-// Need React import for Fragment
-import React from "react";

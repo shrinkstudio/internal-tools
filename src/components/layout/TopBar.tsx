@@ -3,6 +3,7 @@
 import { createBrowserClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function TopBar() {
   const [email, setEmail] = useState<string | null>(null);
@@ -23,16 +24,13 @@ export function TopBar() {
   }
 
   return (
-    <header className="h-12 shrink-0 border-b border-border bg-surface flex items-center justify-end px-5 gap-4">
+    <header className="h-12 shrink-0 border-b border-border bg-card flex items-center justify-end px-5 gap-4">
       {email && (
         <>
-          <span className="text-xs text-text-muted">{email}</span>
-          <button
-            onClick={handleSignOut}
-            className="text-xs text-text-dim hover:text-text-muted transition-colors"
-          >
+          <span className="text-xs text-muted-foreground">{email}</span>
+          <Button variant="ghost" size="xs" onClick={handleSignOut}>
             Sign out
-          </button>
+          </Button>
         </>
       )}
     </header>

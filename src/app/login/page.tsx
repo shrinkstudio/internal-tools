@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { createBrowserClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -32,49 +35,39 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0C0C0C]">
+    <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold text-[#EDEDED]">
+          <h1 className="text-2xl font-semibold text-foreground">
             Shrink Studio
           </h1>
-          <p className="mt-1 text-sm text-[#888888]">Internal Tools</p>
+          <p className="mt-1 text-sm text-muted-foreground">Internal Tools</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-[#888888] mb-1"
-            >
-              Email
-            </label>
-            <input
+            <Label htmlFor="email">Email</Label>
+            <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-md border border-[#1e1e1e] bg-[#141414] px-3 py-2 text-sm text-[#EDEDED] placeholder-[#555] focus:border-[#333] focus:outline-none focus:ring-1 focus:ring-[#333]"
               placeholder="you@shrink.studio"
+              className="mt-1"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-[#888888] mb-1"
-            >
-              Password
-            </label>
-            <input
+            <Label htmlFor="password">Password</Label>
+            <Input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-md border border-[#1e1e1e] bg-[#141414] px-3 py-2 text-sm text-[#EDEDED] placeholder-[#555] focus:border-[#333] focus:outline-none focus:ring-1 focus:ring-[#333]"
               placeholder="••••••••"
+              className="mt-1"
             />
           </div>
 
@@ -82,13 +75,9 @@ export default function LoginPage() {
             <p className="text-sm text-red-400">{error}</p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-[#EDEDED] px-4 py-2 text-sm font-medium text-[#0C0C0C] hover:bg-[#d4d4d4] disabled:opacity-50 transition-colors"
-          >
+          <Button type="submit" disabled={loading} className="w-full">
             {loading ? "Signing in..." : "Sign in"}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

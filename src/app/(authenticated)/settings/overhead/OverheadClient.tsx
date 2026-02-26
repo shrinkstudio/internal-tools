@@ -6,6 +6,9 @@ import { calculateOverheadPerDay } from "@/lib/calculations";
 import { formatCurrencyExact } from "@/lib/utils";
 import { SummaryCard } from "@/components/ui/SummaryCard";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 type OverheadItem = {
   id: string;
@@ -151,9 +154,9 @@ export function OverheadClient({
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-semibold text-text">Business Overhead</h1>
-        <p className="mt-1 text-sm text-text-muted">
-          Your running costs — gets added on top of every freelancer&apos;s rate
+        <h1 className="text-xl font-semibold text-foreground">Business Overhead</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Your running costs - gets added on top of every freelancer&apos;s rate
         </p>
       </div>
 
@@ -171,15 +174,15 @@ export function OverheadClient({
           label="Overhead Per Billable Day"
           value={formatCurrencyExact(overheadPerDay)}
         />
-        <div className="rounded-lg border border-border bg-surface px-4 py-3">
-          <p className="text-xs text-text-muted">Annual Billable Days</p>
-          <input
+        <div className="rounded-lg border border-border bg-card px-4 py-3">
+          <p className="text-xs text-muted-foreground">Annual Billable Days</p>
+          <Input
             type="number"
             value={billableDays}
             onChange={(e) =>
               handleBillableDaysChange(Number(e.target.value))
             }
-            className="mt-1 w-20 bg-bg border border-border rounded px-2 py-1 text-lg font-semibold text-text tabular-nums focus:border-border-hover focus:outline-none"
+            className="mt-1 w-20 h-auto text-lg font-semibold tabular-nums"
           />
         </div>
       </div>
@@ -188,20 +191,20 @@ export function OverheadClient({
       <div className="rounded-lg border border-border overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-surface">
-              <th className="px-4 py-2.5 text-left text-xs font-medium text-text-muted">
+            <tr className="border-b border-border bg-card">
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">
                 Name
               </th>
-              <th className="px-4 py-2.5 text-left text-xs font-medium text-text-muted">
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">
                 Category
               </th>
-              <th className="px-4 py-2.5 text-right text-xs font-medium text-text-muted">
+              <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground">
                 Monthly Cost
               </th>
-              <th className="px-4 py-2.5 text-left text-xs font-medium text-text-muted">
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground">
                 Notes
               </th>
-              <th className="px-4 py-2.5 text-right text-xs font-medium text-text-muted w-20">
+              <th className="px-4 py-2.5 text-right text-xs font-medium text-muted-foreground w-20">
                 Actions
               </th>
             </tr>
@@ -212,12 +215,12 @@ export function OverheadClient({
               return (
                 <tr
                   key={item.id}
-                  className="border-b border-border last:border-b-0 hover:bg-surface/50 cursor-pointer"
+                  className="border-b border-border last:border-b-0 hover:bg-card/50 cursor-pointer"
                   onClick={() => setEditingId(item.id)}
                 >
                   <td className="px-4 py-2">
                     {isEditing ? (
-                      <input
+                      <Input
                         type="text"
                         value={item.name}
                         onChange={(e) =>
@@ -226,12 +229,12 @@ export function OverheadClient({
                         onKeyDown={(e) =>
                           e.key === "Enter" && setEditingId(null)
                         }
-                        className="w-full bg-bg border border-border rounded px-2 py-1 text-sm text-text focus:border-border-hover focus:outline-none"
+                        className="h-7 text-sm"
                         autoFocus
                         onClick={(e) => e.stopPropagation()}
                       />
                     ) : (
-                      <span className="text-text">
+                      <span className="text-foreground">
                         {item.name || "Untitled"}
                       </span>
                     )}
@@ -247,7 +250,7 @@ export function OverheadClient({
                             e.target.value
                           )
                         }
-                        className="bg-bg border border-border rounded px-2 py-1 text-sm text-text focus:border-border-hover focus:outline-none"
+                        className="bg-background border border-border rounded px-2 py-1 text-sm text-foreground focus:border-input focus:outline-none"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {CATEGORIES.map((c) => (
@@ -257,16 +260,16 @@ export function OverheadClient({
                         ))}
                       </select>
                     ) : (
-                      <span className="inline-block rounded-full bg-border px-2 py-0.5 text-xs text-text-muted capitalize">
+                      <Badge variant="secondary" className="capitalize">
                         {item.category}
-                      </span>
+                      </Badge>
                     )}
                   </td>
                   <td className="px-4 py-2 text-right tabular-nums">
                     {isEditing ? (
                       <div className="flex items-center justify-end gap-1">
-                        <span className="text-text-muted">£</span>
-                        <input
+                        <span className="text-muted-foreground">£</span>
+                        <Input
                           type="number"
                           step="0.01"
                           value={item.monthly_cost}
@@ -280,19 +283,19 @@ export function OverheadClient({
                           onKeyDown={(e) =>
                             e.key === "Enter" && setEditingId(null)
                           }
-                          className="w-24 bg-bg border border-border rounded px-2 py-1 text-sm text-text text-right tabular-nums focus:border-border-hover focus:outline-none"
+                          className="h-7 w-24 text-sm text-right tabular-nums"
                           onClick={(e) => e.stopPropagation()}
                         />
                       </div>
                     ) : (
-                      <span className="text-text">
+                      <span className="text-foreground">
                         {formatCurrencyExact(Number(item.monthly_cost))}
                       </span>
                     )}
                   </td>
                   <td className="px-4 py-2">
                     {isEditing ? (
-                      <input
+                      <Input
                         type="text"
                         value={item.notes ?? ""}
                         onChange={(e) =>
@@ -305,27 +308,28 @@ export function OverheadClient({
                         onKeyDown={(e) =>
                           e.key === "Enter" && setEditingId(null)
                         }
-                        className="w-full bg-bg border border-border rounded px-2 py-1 text-sm text-text focus:border-border-hover focus:outline-none"
+                        className="h-7 text-sm"
                         placeholder="Optional note"
                         onClick={(e) => e.stopPropagation()}
                       />
                     ) : (
-                      <span className="text-text-muted">
-                        {item.notes || "—"}
+                      <span className="text-muted-foreground">
+                        {item.notes || "\u2014"}
                       </span>
                     )}
                   </td>
                   <td className="px-4 py-2 text-right">
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="xs"
                       onClick={(e) => {
                         e.stopPropagation();
                         setDeleteTarget(item);
                       }}
-                      className="text-text-dim hover:text-red-400 transition-colors text-xs"
-                      title="Delete"
+                      className="text-text-dim hover:text-red-400"
                     >
                       Delete
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               );
@@ -335,12 +339,9 @@ export function OverheadClient({
       </div>
 
       {/* Add item */}
-      <button
-        onClick={handleAddItem}
-        className="rounded-md border border-dashed border-border px-4 py-2 text-sm text-text-muted hover:border-border-hover hover:text-text transition-colors"
-      >
+      <Button variant="dashed" onClick={handleAddItem}>
         + Add item
-      </button>
+      </Button>
 
       {/* Delete confirmation */}
       <ConfirmDialog

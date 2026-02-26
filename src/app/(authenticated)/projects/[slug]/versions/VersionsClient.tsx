@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { createBrowserClient } from "@/lib/supabase/client";
 import {
   calculateGrossProfit,
@@ -12,6 +11,16 @@ import {
 } from "@/lib/calculations";
 import { formatCurrency, formatCurrencyExact } from "@/lib/utils";
 import { Toast } from "@/components/ui/Toast";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type {
   Project,
   ProjectVersion,
@@ -37,7 +46,6 @@ export function VersionsClient({
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [showCompare, setShowCompare] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const router = useRouter();
   const supabase = createBrowserClient();
 
   function toggleSelect(id: string) {
@@ -91,7 +99,7 @@ export function VersionsClient({
 
       setVersions((prev) => [newVersion, ...prev]);
       setToast(
-        `Reverted to v${version.version_number} — saved as v${nextNumber}`
+        `Reverted to v${version.version_number} - saved as v${nextNumber}`
       );
     }
   }
@@ -111,26 +119,20 @@ export function VersionsClient({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-text-muted">{project.client_name}</p>
-          <h1 className="text-xl font-semibold text-text">
-            Version History — {project.project_name}
+          <p className="text-sm text-muted-foreground">{project.client_name}</p>
+          <h1 className="text-xl font-semibold text-foreground">
+            Version History - {project.project_name}
           </h1>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {canCompare && (
-            <button
-              onClick={() => setShowCompare(true)}
-              className="rounded-md bg-text px-4 py-1.5 text-xs font-medium text-bg hover:bg-accent-hover transition-colors"
-            >
+            <Button size="xs" onClick={() => setShowCompare(true)}>
               Compare Selected
-            </button>
+            </Button>
           )}
-          <Link
-            href={`/projects/${project.slug}`}
-            className="rounded-md border border-border px-3 py-1.5 text-xs text-text-muted hover:bg-surface transition-colors"
-          >
-            Back to Scope
-          </Link>
+          <Button variant="outline" size="xs" asChild>
+            <Link href={`/projects/${project.slug}`}>Back to Scope</Link>
+          </Button>
         </div>
       </div>
 
@@ -152,40 +154,35 @@ export function VersionsClient({
                 : "text-red-400";
 
           return (
-            <div
+            <Card
               key={version.id}
-              className={`rounded-lg border p-4 transition-colors ${
+              className={`p-4 transition-colors ${
                 isSelected
-                  ? "border-text-muted bg-surface"
-                  : "border-border hover:border-border-hover"
+                  ? "border-muted-foreground bg-card"
+                  : "hover:border-border-hover"
               }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3">
                   {/* Checkbox */}
-                  <button
-                    onClick={() => toggleSelect(version.id)}
-                    className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center text-[10px] transition-colors ${
-                      isSelected
-                        ? "border-text bg-text text-bg"
-                        : "border-border hover:border-border-hover"
-                    }`}
-                  >
-                    {isSelected && "✓"}
-                  </button>
+                  <Checkbox
+                    checked={isSelected}
+                    onCheckedChange={() => toggleSelect(version.id)}
+                    className="mt-0.5"
+                  />
 
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="rounded bg-border px-1.5 py-0.5 text-xs font-mono font-medium text-text">
+                      <span className="rounded bg-secondary px-1.5 py-0.5 text-xs font-mono font-medium text-foreground">
                         v{version.version_number}
                       </span>
-                      <span className="text-sm font-medium text-text">
+                      <span className="text-sm font-medium text-foreground">
                         {version.name ?? "Unnamed version"}
                       </span>
                       {isCurrent && (
-                        <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-medium text-green-400">
+                        <Badge variant="secondary" className="bg-green-500/15 text-green-400 text-[10px]">
                           Current
-                        </span>
+                        </Badge>
                       )}
                     </div>
                     <p className="mt-1 text-xs text-text-dim">
@@ -207,20 +204,20 @@ export function VersionsClient({
                 <div className="flex items-center gap-4 text-xs tabular-nums">
                   <div className="text-right">
                     <p className="text-text-dim">Investment</p>
-                    <p className="text-text font-medium">
+                    <p className="text-foreground font-medium">
                       {formatCurrency(investment)}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-text-dim">Cost</p>
-                    <p className="text-text-muted">
+                    <p className="text-muted-foreground">
                       {formatCurrency(internalCost)}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-text-dim">Margin</p>
                     <p className={`font-medium ${marginColor}`}>
-                      {investment > 0 ? `${margin.toFixed(1)}%` : "—"}
+                      {investment > 0 ? `${margin.toFixed(1)}%` : "\u2014"}
                     </p>
                   </div>
                 </div>
@@ -228,62 +225,57 @@ export function VersionsClient({
 
               {/* Actions */}
               <div className="mt-3 flex items-center gap-3 pl-7">
-                <Link
-                  href={`/projects/${project.slug}?v=${version.version_number}`}
-                  className="text-xs text-text-muted hover:text-text transition-colors"
-                >
-                  View
-                </Link>
+                <Button variant="ghost" size="xs" asChild>
+                  <Link href={`/projects/${project.slug}?v=${version.version_number}`}>
+                    View
+                  </Link>
+                </Button>
                 {!isCurrent && (
-                  <button
-                    onClick={() => handleRevert(version)}
-                    className="text-xs text-text-muted hover:text-text transition-colors"
-                  >
+                  <Button variant="ghost" size="xs" onClick={() => handleRevert(version)}>
                     Revert to this version
-                  </button>
+                  </Button>
                 )}
-                <button
-                  onClick={() => handleShareVersion(version)}
-                  className="text-xs text-text-muted hover:text-text transition-colors"
-                >
+                <Button variant="ghost" size="xs" onClick={() => handleShareVersion(version)}>
                   Share this version
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="xs"
                   onClick={() =>
                     window.open(
                       `/api/projects/${project.slug}/export?type=client&v=${version.version_number}`,
                       "_blank"
                     )
                   }
-                  className="text-xs text-text-muted hover:text-text transition-colors"
                 >
                   Export Client PDF
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="xs"
                   onClick={() =>
                     window.open(
                       `/api/projects/${project.slug}/export?type=internal&v=${version.version_number}`,
                       "_blank"
                     )
                   }
-                  className="text-xs text-text-muted hover:text-text transition-colors"
                 >
                   Export Internal PDF
-                </button>
+                </Button>
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>
 
       {versions.length === 0 && (
-        <div className="rounded-lg border border-dashed border-border py-12 text-center">
-          <p className="text-sm text-text-muted">No versions saved yet</p>
+        <Card className="border-dashed py-12 text-center">
+          <p className="text-sm text-muted-foreground">No versions saved yet</p>
           <p className="mt-1 text-xs text-text-dim">
             Use &quot;Save Version&quot; on the scoping page to create a
             snapshot
           </p>
-        </div>
+        </Card>
       )}
 
       {/* Compare modal */}
@@ -444,14 +436,14 @@ function CompareView({
   const changedDiffs = diffs.filter((d) => d.type !== "unchanged");
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="w-full max-w-3xl rounded-lg border border-border bg-bg shadow-2xl max-h-[85vh] flex flex-col">
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-0 gap-0" showCloseButton={false}>
         {/* Header */}
-        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+        <DialogHeader className="px-5 py-4 border-b border-border flex-row items-center justify-between">
           <div>
-            <h3 className="text-sm font-semibold text-text">
+            <DialogTitle>
               Compare v{older.version_number} → v{newer.version_number}
-            </h3>
+            </DialogTitle>
             <p className="text-xs text-text-dim mt-0.5">
               {older.name ?? `v${older.version_number}`} →{" "}
               {newer.name ?? `v${newer.version_number}`}
@@ -459,11 +451,11 @@ function CompareView({
           </div>
           <button
             onClick={onClose}
-            className="text-text-dim hover:text-text transition-colors text-lg"
+            className="text-text-dim hover:text-foreground transition-colors text-lg"
           >
-            ×
+            &times;
           </button>
-        </div>
+        </DialogHeader>
 
         {/* Diff table */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
@@ -518,28 +510,28 @@ function CompareView({
                       <td className="py-2 pr-3">
                         <span className={`text-sm ${textClass}`}>
                           {diff.type === "added" && "+ "}
-                          {diff.type === "removed" && "− "}
+                          {diff.type === "removed" && "\u2212 "}
                           {diff.name}
                         </span>
                       </td>
                       <td className="py-2 pr-3 text-xs text-text-dim">
                         {diff.phaseName}
                       </td>
-                      <td className="py-2 text-right text-xs text-text-muted tabular-nums">
-                        {diff.daysA > 0 ? diff.daysA : "—"}
+                      <td className="py-2 text-right text-xs text-muted-foreground tabular-nums">
+                        {diff.daysA > 0 ? diff.daysA : "\u2014"}
                       </td>
-                      <td className="py-2 text-right text-xs text-text-muted tabular-nums">
-                        {diff.daysB > 0 ? diff.daysB : "—"}
+                      <td className="py-2 text-right text-xs text-muted-foreground tabular-nums">
+                        {diff.daysB > 0 ? diff.daysB : "\u2014"}
                       </td>
-                      <td className="py-2 text-right text-xs text-text-muted tabular-nums">
+                      <td className="py-2 text-right text-xs text-muted-foreground tabular-nums">
                         {diff.investmentA > 0
                           ? formatCurrencyExact(diff.investmentA)
-                          : "—"}
+                          : "\u2014"}
                       </td>
-                      <td className="py-2 text-right text-xs text-text-muted tabular-nums">
+                      <td className="py-2 text-right text-xs text-muted-foreground tabular-nums">
                         {diff.investmentB > 0
                           ? formatCurrencyExact(diff.investmentB)
-                          : "—"}
+                          : "\u2014"}
                       </td>
                       <td
                         className={`py-2 text-right text-xs font-medium tabular-nums ${textClass}`}
@@ -564,7 +556,7 @@ function CompareView({
           <div>
             <p className="text-text-dim">Net Investment Change</p>
             <p
-              className={`font-medium tabular-nums ${netInvChange > 0 ? "text-green-400" : netInvChange < 0 ? "text-red-400" : "text-text-muted"}`}
+              className={`font-medium tabular-nums ${netInvChange > 0 ? "text-green-400" : netInvChange < 0 ? "text-red-400" : "text-muted-foreground"}`}
             >
               {netInvChange > 0 ? "+" : ""}
               {formatCurrencyExact(netInvChange)}
@@ -573,14 +565,14 @@ function CompareView({
           <div>
             <p className="text-text-dim">Net Internal Cost Change</p>
             <p
-              className={`font-medium tabular-nums ${netCostChange > 0 ? "text-orange-400" : netCostChange < 0 ? "text-green-400" : "text-text-muted"}`}
+              className={`font-medium tabular-nums ${netCostChange > 0 ? "text-orange-400" : netCostChange < 0 ? "text-green-400" : "text-muted-foreground"}`}
             >
               {netCostChange > 0 ? "+" : ""}
               {formatCurrencyExact(netCostChange)}
             </p>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

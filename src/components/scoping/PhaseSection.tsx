@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { formatCurrency, formatCurrencyExact, abbreviateRole } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import type { ScopePhase, ScopeDeliverable, Role } from "@/lib/types";
 import { DeliverableRow } from "./DeliverableRow";
 
@@ -49,27 +51,27 @@ export function PhaseSection({
   return (
     <div className="rounded-lg border border-border overflow-hidden">
       {/* Phase header */}
-      <div className="flex items-center justify-between bg-surface px-4 py-3 border-b border-border">
+      <div className="flex items-center justify-between bg-card px-4 py-3 border-b border-border">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="text-text-dim hover:text-text transition-colors text-xs"
+            className="text-text-dim hover:text-foreground transition-colors text-xs"
           >
-            {collapsed ? "▸" : "▾"}
+            {collapsed ? "\u25B8" : "\u25BE"}
           </button>
           {editingName ? (
-            <input
+            <Input
               type="text"
               value={phase.name}
               onChange={(e) => onPhaseRename(phase.id, e.target.value)}
               onBlur={() => setEditingName(false)}
               onKeyDown={(e) => e.key === "Enter" && setEditingName(false)}
-              className="bg-bg border border-border rounded px-2 py-0.5 text-sm font-semibold text-text focus:outline-none"
+              className="h-7 w-48 text-sm font-semibold"
               autoFocus
             />
           ) : (
             <h2
-              className="text-sm font-semibold text-text cursor-pointer hover:text-text-muted transition-colors"
+              className="text-sm font-semibold text-foreground cursor-pointer hover:text-muted-foreground transition-colors"
               onClick={() => setEditingName(true)}
             >
               {phase.name}
@@ -81,13 +83,13 @@ export function PhaseSection({
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs tabular-nums">
-          <span className="text-text-muted">
+          <span className="text-muted-foreground">
             {phaseTotalDays % 1 === 0
               ? phaseTotalDays
               : phaseTotalDays.toFixed(1)}{" "}
             days
           </span>
-          <span className="text-text font-medium">
+          <span className="text-foreground font-medium">
             {formatCurrency(phaseTotalInvestment)}
           </span>
         </div>
@@ -100,7 +102,7 @@ export function PhaseSection({
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border bg-bg">
+                  <tr className="border-b border-border bg-background">
                     <th className="px-4 py-2 text-left text-xs font-medium text-text-dim min-w-[200px]">
                       Deliverable
                     </th>
@@ -141,19 +143,19 @@ export function PhaseSection({
                 </tbody>
                 {/* Phase subtotal */}
                 <tfoot>
-                  <tr className="border-t border-border bg-surface">
-                    <td className="px-4 py-2 text-xs font-medium text-text-muted">
+                  <tr className="border-t border-border bg-card">
+                    <td className="px-4 py-2 text-xs font-medium text-muted-foreground">
                       {phase.name} Total
                     </td>
                     {roles.map((role) => (
                       <td key={role.id} />
                     ))}
-                    <td className="px-3 py-2 text-right text-xs font-medium text-text tabular-nums">
+                    <td className="px-3 py-2 text-right text-xs font-medium text-foreground tabular-nums">
                       {phaseTotalDays % 1 === 0
                         ? phaseTotalDays
                         : phaseTotalDays.toFixed(1)}
                     </td>
-                    <td className="px-3 py-2 text-right text-xs font-medium text-text tabular-nums">
+                    <td className="px-3 py-2 text-right text-xs font-medium text-foreground tabular-nums">
                       {formatCurrencyExact(phaseTotalInvestment)}
                     </td>
                     <td />
@@ -165,16 +167,12 @@ export function PhaseSection({
 
           {/* Add deliverable button */}
           <div className="px-4 py-3">
-            <button
-              onClick={onAddDeliverable}
-              className="text-xs text-text-muted hover:text-text transition-colors"
-            >
+            <Button variant="ghost" size="xs" onClick={onAddDeliverable}>
               + Add Deliverable
-            </button>
+            </Button>
           </div>
         </>
       )}
     </div>
   );
 }
-
